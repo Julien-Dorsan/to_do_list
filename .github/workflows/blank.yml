@@ -1,0 +1,27 @@
+name: Docker Deploy
+
+on:
+  push:
+    branches: [ main, dev ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Create .env files from secrets
+        run: |
+          printf "%s" "${{ secrets.BACKEND_ENV }}" > backend/.env
+          printf "%s" "${{ secrets.FRONTEND_ENV }}" > frontend/.env
+
+      - name: Build and run Docker Compose (test build)
+        env:
+          MYSQL_ROOT_PASSWORD: "${{ secrets.MYSQL_ROOT_PASSWORD }}"
+        run: |
+          docker compose up -d --build
