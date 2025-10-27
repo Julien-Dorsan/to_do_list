@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     # created apps
     'api',
     'core',
+    'lists',
     'tasks',
     'users',
 ]
