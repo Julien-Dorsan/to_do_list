@@ -2,10 +2,11 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "types": ["vite/client"],
     "strict": true,
     "noEmit": true
   },
-  "include": ["src", "src/env.d.ts"]
+  "extends": "./tsconfig.app.json",
+  "include": ["src", "src/env.d.ts"],
 }
