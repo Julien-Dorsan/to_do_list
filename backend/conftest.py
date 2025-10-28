@@ -3,6 +3,7 @@ from rest_framework.test import APIClient
 from datetime import datetime, timezone
 from lists.models import List
 from tasks.models import Task
+from categories.models import Category
 
 @pytest.fixture
 def todo_list():
@@ -37,6 +38,23 @@ def task(todo_list):
         list = todo_list
     )
     
+@pytest.fixture
+def category(_task):
+    """creates a test category
+
+    Args:
+        _task (Task): a test task
+
+    Returns:
+        Category: a test category
+    """
+    return Category.objects.create(
+        name = "Test Category",
+        description = "Testing category creation",
+        color = "#00ff99",
+        task = _task
+    )
+        
 @pytest.fixture
 def api_client():
     """creates a test api client
