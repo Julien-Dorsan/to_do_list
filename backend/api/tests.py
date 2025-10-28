@@ -92,6 +92,28 @@ def test_update_task(api_client, todo_list):
     assert response.json()["description"] == "Updated desc"
 
 @pytest.mark.django_db
+def test_task_add_category(api_client, todo_list, category):
+    """tests categories can be added to existing tasks
+
+    Args:
+        api_client (APIClient): simulates http request
+        todo_list (List): a test list
+        category (Category) : a test category
+    """
+    task = Task.objects.create(
+        name = "To Update",
+        description = "desc",
+        priority = 1,
+        due_at = datetime(2026, 1, 1, tzinfo=timezone.utc),
+        list = todo_list
+    )
+    
+    payload = { "categories": [category.id] }
+    response = api_client.patch(f"/api/tasks/{task.id}/", payload, format="json")
+    assert response.status_code == 200
+    assert task.categories.filter(id=category.id).exists()
+
+@pytest.mark.django_db
 def test_delete_task(api_client, todo_list):
     """tests tasks are properly deleted
 

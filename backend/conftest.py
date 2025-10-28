@@ -39,7 +39,7 @@ def task(todo_list):
     )
     
 @pytest.fixture
-def category(_task):
+def category(task):
     """creates a test category
 
     Args:
@@ -48,12 +48,13 @@ def category(_task):
     Returns:
         Category: a test category
     """
-    return Category.objects.create(
+    category = Category.objects.create(
         name = "Test Category",
         description = "Testing category creation",
         color = "#00ff99",
-        task = _task
     )
+    category.tasks.add(task)
+    return category
         
 @pytest.fixture
 def api_client():

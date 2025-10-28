@@ -46,26 +46,25 @@ def test_duplicate_fields(todo_list):
             list = todo_list
         )
 
-
 @pytest.mark.django_db
 def test_missing_required_fields(todo_list):
     """Ensures the task is not created with missing non null fields"""
-    t  =  Task(list = todo_list)
+    tsk = Task(list = todo_list)
     with pytest.raises(ValidationError):
-        t.full_clean()
+        tsk.full_clean()
 
 
 @pytest.mark.django_db
 def test_invalid_name(todo_list):
     """Ensures a name too loong raise an error"""
-    t  =  Task(
+    tsk = Task(
         name = "x" * 100,
         description = "Too long name",
         due_at = datetime(2026, 1, 1, tzinfo = timezone.utc),
         list = todo_list,
     )
     with pytest.raises(ValidationError):
-        t.full_clean()
+        tsk.full_clean()
 
 
 @pytest.mark.django_db
@@ -88,3 +87,16 @@ def test_parent_child_relationship(todo_list):
     assert child.parent == parent
     assert parent.subtasks.count() == 1
     assert parent.subtasks.first().name == "Sub Task"
+
+@pytest.mark.django_db
+def test_task_creation_with_category(todo_list, category):
+    """Ensure a task is properly created"""
+    tsk  =  Task.objects.create(
+        name = "Default Task",
+        description = "Defaults test",
+        due_at = datetime(2026, 1, 1, tzinfo = timezone.utc),
+        list = todo_list
+    )
+    tsk.categories.add(category)
+    assert tsk.name == "Default Task"
+    assert tsk.categories.first().name == "Test Category"
