@@ -22,7 +22,6 @@ export default function NewListModal({
         };
     }, [show]);
 
-    // reset state when opening/closing
     useEffect(() => {
         if (!show) {
             setName("");
@@ -40,7 +39,6 @@ export default function NewListModal({
         Number(priority) < 0 ||
         Number(priority) > 5;
 
-    //Can only submit if the fields are not emptyh
     const canSubmit =
         !submitting && !nameTooLong && !descTooLong && !prioInvalid && name.trim().length > 0;
 
@@ -57,7 +55,7 @@ export default function NewListModal({
                 priority: Number(priority),
             };
             const created = await onCreate(payload);
-            // Optimistically update the UI
+            // Optimistically updates the UI
             onCreated?.(created);
             onClose?.();
         } catch (err) {
@@ -82,7 +80,7 @@ export default function NewListModal({
                 <div className="modal-dialog modal-dialog-centered modal-lg">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h1 className="modal-title fs-5">Créer une nouvelle liste</h1>
+                            <h1 className="modal-title fs-5">Créer une nouvelle liste de tâches</h1>
                             <button type="button" className="btn-close" onClick={onClose} aria-label="Close" />
                         </div>
 
@@ -132,8 +130,6 @@ export default function NewListModal({
                                     </div>
                                     {descTooLong && <div className="invalid-feedback">Max 200 caractères.</div>}
                                 </div>
-
-                                {/* Priority */}
                                 <div className="row g-3">
                                     <div className="col-12 col-sm-6">
                                         <div className="form-floating">

@@ -83,7 +83,8 @@ def test_update_task(api_client, todo_list):
         description = "Old desc",
         priority = 1,
         due_at = datetime(2026, 1, 1, tzinfo=timezone.utc),
-        list = todo_list
+        list = todo_list,
+        done = True
     )
     
     payload = {"description": "Updated desc"}
@@ -209,16 +210,15 @@ def test_list_retrieve(api_client):
     """
     
     lst = List.objects.create(
-        public_token = "tokenX",
         name = "Single List",
         description = "Retrieve test"
     )
 
-    response = api_client.get(f"/api/lists/{lst.id}/")
+    response = api_client.get(f"/api/lists/{lst.public_token}/")
     assert response.status_code == 200
     data = response.json()
     assert data["name"] == "Single List"
-    assert data["public_token"] == "tokenX"
+    assert data["public_token"] == lst.public_token
 
 
 @pytest.mark.django_db
@@ -229,13 +229,12 @@ def test_list_update(api_client):
         api_client (APIClient): simulates http request
     """
     lst = List.objects.create(
-        public_token = "tokenY",
         name = "Updatable List",
         description = "Before update"
     )
 
     payload = {"description": "Updated description"}
-    response = api_client.patch(f"/api/lists/{lst.id}/", payload, format="json")
+    response = api_client.patch(f"/api/lists/{lst.public_token}/", payload, format="json")
     assert response.status_code == 200
     assert response.json()["description"] == "Updated description"
 
@@ -248,12 +247,11 @@ def test_list_delete(api_client):
         api_client (APIClient): simulates http request
     """
     lst = List.objects.create(
-        public_token = "tokenZ",
         name = "Delete Me",
         description = "Will be deleted"
     )
 
-    response = api_client.delete(f"/api/lists/{lst.id}/")
+    response = api_client.delete(f"/api/lists/{lst.public_token}/")
     assert response.status_code == 204
     assert List.objects.count() == 0
 

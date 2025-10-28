@@ -10,23 +10,14 @@ def generate_public_token():
     return secrets.token_urlsafe(22)
 
 class List(models.Model):
-    try :
-        public_token = models.CharField(
-        max_length=30,
-        unique=True,
-        null=False,
-        editable=False,
-        default=generate_public_token,
-        )
-    # lazy retry clause but it's fine with the odds of a collision happning
-    except:
-        public_token = models.CharField(
-        max_length=30,
-        unique=True,
-        null=False,
-        editable=False,
-        default=generate_public_token,
-        )
+    public_token = models.CharField(
+    max_length=30,
+    unique=True,
+    null=False,
+    editable=False,
+    default=generate_public_token,
+    db_index=True
+    )
     name = models.CharField(max_length=30, null=False)
     description = models.CharField(max_length=200)
     priority = models.SmallIntegerField(default=3)

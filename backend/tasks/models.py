@@ -10,7 +10,13 @@ class Task(models.Model):
         updated_at = models.DateTimeField(auto_now=True)
         
         # foreign keys
-        list = models.ForeignKey("lists.List", verbose_name="Task lists", on_delete=models.CASCADE, null=False)
+        list = models.ForeignKey(
+        "lists.List",
+        verbose_name="Task lists",
+        on_delete=models.CASCADE,
+        null=False,
+        related_name="tasks"
+        )
         parent = models.ForeignKey("self", verbose_name="Parent task", on_delete=models.CASCADE, related_name="subtasks", null=True, blank=True)
         categories = models.ManyToManyField("categories.Category", related_name="tasks", blank=True)
         
