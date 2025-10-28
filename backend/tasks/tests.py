@@ -3,39 +3,13 @@ from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
 from datetime import datetime, timezone
 from tasks.models import Task
-from lists.models import List
-
-
-@pytest.fixture
-def todo_list():
-    """Fixture to create a paren list for the tasks"""
-    return List.objects.create(
-        public_token = "hashed_token_001",
-        name = "Main List",
-        description = "Test list for tasks",
-        priority = 1
-    )
-
-
-@pytest.fixture
-def task(todo_list):
-    """Fixture to create a task"""
-    return Task.objects.create(
-        name = "Test Task",
-        description = "Testing task creation",
-        level = 1,
-        priority = 2,
-        due_at = datetime(2026, 1, 1, tzinfo = timezone.utc),
-        list = todo_list
-    )
-
 
 @pytest.mark.django_db
 def test_task_creation(task):
     """Ensure a task is properly created"""
     assert task.id is not None
     assert task.name == "Test Task"
-    assert task.list.name == "Main List"
+    assert task.list.name == "Test list"
     assert task.done is False
     assert isinstance(str(task), str)
     assert str(task) == "Test Task"

@@ -3,16 +3,6 @@ from lists.models import List
 from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
 
-@pytest.fixture
-def todo_list():
-    """Fixture to create a list"""
-    return List.objects.create(
-        public_token = "hashed_token",
-        name = "Test list",
-        description = "test description",
-        priority = 2
-    )
-
 @pytest.mark.django_db
 def test_list_creation(todo_list):
     """Ensures the list has been properly created"""
