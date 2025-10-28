@@ -1,5 +1,7 @@
 import './App.css';
 
+import RootUserLayout from './layout/rootUserLayout';
+
 import {
     createBrowserRouter,
     Route,
@@ -10,7 +12,7 @@ import {
 
 const router = createBrowserRouter(
     createRoutesFromElements(
-        <Route path='/' element={<></>}>
+        <Route path='/' element={<RootUserLayout />}>
         </Route>
     )
 )
