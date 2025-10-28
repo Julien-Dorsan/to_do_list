@@ -21,7 +21,7 @@ load_dotenv()
 # .env var loading
 ENV = {
     'DB_URL' : os.getenv('DB_URL'),
-    'FRONTROUTE': os.getenv('FRONT_ROUTE')
+    'FRONT_ROUTE': os.getenv('FRONT_ROUTE')
    }
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -36,7 +36,7 @@ SECRET_KEY = 'django-insecure-q=ys=@f^py1th64qo9_teu&c2we^*c_1x#gq8b)bq)$nd2m(a(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ENV['FRONTROUTE']]
+ALLOWED_HOSTS = [ENV['FRONT_ROUTE']]
 
 
 # Application definition
