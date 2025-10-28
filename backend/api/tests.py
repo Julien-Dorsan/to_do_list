@@ -1,6 +1,7 @@
 import pytest
 from lists.models import List
 from tasks.models import Task
+from categories.models import Category
 from datetime import datetime, timezone
 
 ### TASKS ###
@@ -249,5 +250,119 @@ def test_invalid_list_creation(api_client):
     }
 
     response = api_client.post("/api/lists/", payload, format="json")
+    assert response.status_code == 400
+    assert "name" in response.json()
+
+### CATEGORY ###
+
+@pytest.mark.django_db
+def test_create_category(api_client, task):
+    """tests categories are properly created
+
+    Args:
+        api_client (APIClient): simulates http request
+        task (Task): a test task
+    """
+    payload = {
+        "name": "Personal",
+        "description": "Personal tasks",
+        "color": "#00FF00",
+        "tasks": [task.id]
+    }
+
+    response = api_client.post("/api/categories/", payload, format="json")
+    assert response.status_code == 201
+    data = response.json()
+    assert data["name"] == "Personal"
+    assert Category.objects.count() == 1
+
+@pytest.mark.django_db
+def test_list_categories(api_client):
+    """Tests categories are retrieved properly
+
+    Args:
+        api_client (APIClient): simulates http request
+    """
+    
+    Category.objects.create(
+        name="Work",
+        description="Work tasks",
+        color="#FF0000"
+        )
+    response = api_client.get("/api/categories/")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 1
+    assert data[0]["name"] == "Work"
+
+@pytest.mark.django_db
+def test_retrieve_category(api_client):
+    """Tests a single task is retrieved properly
+
+    Args:
+        api_client (APIClient): simulates http request
+    """
+    category = Category.objects.create(
+        name = "Hobby",
+        description = "Hobby tasks",
+        color = "#0000FF"
+    )
+
+    response = api_client.get(f"/api/categories/{category.id}/")
+    assert response.status_code == 200
+    assert response.json()["name"] == "Hobby"
+
+
+@pytest.mark.django_db
+def test_update_category(api_client):
+    """Tests categories are properly updated
+
+    Args:
+        api_client (APIClient): simulates http request
+    """
+    category = Category.objects.create(
+        name = "Temp",
+        description = "Old description",
+        color="#AAAAAA"
+    )
+
+    payload = {"description": "Updated via API"}
+    response = api_client.patch(f"/api/categories/{category.id}/", payload, format="json")
+    assert response.status_code == 200
+    assert response.json()["description"] == "Updated via API"
+
+
+@pytest.mark.django_db
+def test_delete_category(api_client):
+    """Tests categories are properly deleted
+
+    Args:
+        api_client (APIClient): simulates http request
+    """
+    category = Category.objects.create(
+        name = "To delete",
+        description = "Delete this category",
+        color = "#CCCCCC"
+    )
+
+    response = api_client.delete(f"/api/categories/{category.id}/")
+    assert response.status_code == 204
+    assert Category.objects.count() == 0
+
+
+@pytest.mark.django_db
+def test_invalid_category_creation(api_client):
+    """Tests that a category with an invalid name can't be created
+
+    Args:
+        api_client (APIClient): simulates http request
+    """
+    # no name
+    payload = {
+        "description": "No name provided",
+        "color": "#123456",
+    }
+
+    response = api_client.post("/api/categories/", payload, format="json")
     assert response.status_code == 400
     assert "name" in response.json()
