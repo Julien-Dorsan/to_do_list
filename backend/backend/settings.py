@@ -18,10 +18,13 @@ from dotenv import load_dotenv
 # .env file loading
 load_dotenv()
 
+# TODO remove front route 2 for production
 # .env var loading
 ENV = {
     'DB_URL' : os.getenv('DB_URL'),
-    'FRONT_ROUTE': os.getenv('FRONT_ROUTE')
+    'SERVER_IP' : os.getenv('SERVER_IP'),
+    'FRONT_ROUTE_1': os.getenv('FRONT_ROUTE_1'),
+    'FRONT_ROUTE_2': os.getenv('FRONT_ROUTE_2')
    }
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -36,9 +39,6 @@ SECRET_KEY = 'django-insecure-q=ys=@f^py1th64qo9_teu&c2we^*c_1x#gq8b)bq)$nd2m(a(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ENV['FRONT_ROUTE']]
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # third party
     'rest_framework',
+    'corsheaders',
     # created apps
     'api',
     'core',
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -68,6 +70,18 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+
+CORS_ALLOWED_ORIGINS = [
+    ENV['FRONT_ROUTE_1'], ENV['FRONT_ROUTE_2']
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    ENV['FRONT_ROUTE_1'], ENV['FRONT_ROUTE_2']
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'backend.urls'
 
