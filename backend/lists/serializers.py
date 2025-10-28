@@ -4,4 +4,4 @@ from .models import List
 class ListSerializer(serializers.ModelSerializer):
     class Meta:
         model = List
-        fields = ["public_token", "name", "description", "priority", "created_at", "updated_at"]
+        fields = '__all__'
