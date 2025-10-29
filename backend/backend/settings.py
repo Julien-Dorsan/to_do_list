@@ -24,7 +24,8 @@ ENV = {
     'DB_URL' : os.getenv('DB_URL'),
     'SERVER_IP' : os.getenv('SERVER_IP'),
     'FRONT_ROUTE_1': os.getenv('FRONT_ROUTE_1'),
-    'FRONT_ROUTE_2': os.getenv('FRONT_ROUTE_2')
+    'FRONT_ROUTE_2': os.getenv('FRONT_ROUTE_2'),
+    'SECRET_KEY': os.getenv('SECRET_KEY')
    }
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -34,10 +35,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-q=ys=@f^py1th64qo9_teu&c2we^*c_1x#gq8b)bq)$nd2m(a('
+SECRET_KEY = ENV["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Application definition
 
